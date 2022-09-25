@@ -1,0 +1,11 @@
+{
+  "required": false,
+  "package": "com.zygzag.hearty.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "hearty.refmap.json",
+  "mixins": [],
+  "client": [
+    "GuiAccessor"
+  ],
+  "minVersion": "0.8"
+}
