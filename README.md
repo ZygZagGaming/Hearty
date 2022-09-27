@@ -36,4 +36,4 @@ InterModComms.sendTo(
 ```
 where `quartet` is of the aforementioned type.
 
-You can also send texture provider or number provider overrides, using a similar format to above, only with "replace_number_provider" or "replace_texture_provider" and an `oshi.util.tuples.Pair<ResourceLocation, TriFunction<Player, Level, Gui, (Integer or ResourceLocation)>`, depending on which override is being used
+You can also send texture provider or number provider overrides, using a similar format to above, only with "replace_number_provider" or "replace_texture_provider" and an `oshi.util.tuples.Pair<ResourceLocation, TriFunction<Player, Level, Gui, (Integer or ResourceLocation)>`, depending on which override is being used.
