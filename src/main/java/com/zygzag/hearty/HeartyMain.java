@@ -35,7 +35,7 @@ public class HeartyMain {
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final HashMap<String, ResourceLocation> CACHE = new HashMap<>();
-    public static Map<ResourceLocation, HeartType> REGISTERED_HEART_TYPES = Map.of(loc("minecraft:health"), HeartType.HEALTH, loc("minecraft:empty"), HeartType.EMPTY, loc("minecraft:absorption"), HeartType.ABSORPTION);
+    public static Map<ResourceLocation, HeartType> REGISTERED_HEART_TYPES = new HashMap<>(Map.of(loc("minecraft:health"), HeartType.HEALTH, loc("minecraft:empty"), HeartType.EMPTY, loc("minecraft:absorption"), HeartType.ABSORPTION));
     private static final Map<ResourceLocation, List<TriFunction<Player, Level, Gui, ResourceLocation>>> HEART_TEXTURE_OVERRIDES = new HashMap<>();
     private static final Map<ResourceLocation, List<TriFunction<Player, Level, Gui, Integer>>> HEART_NUMBER_OVERRIDES = new HashMap<>();
 
