@@ -1,5 +1,7 @@
 # Hearty
  
+[CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/hearty)  
+  
 A Forge mod that provides several features that change how health is displayed in Minecraft.
 
 ## Features
