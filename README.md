@@ -19,8 +19,9 @@ Makes withered hearts display when the player has both wither and poison.
 ### Custom hearts
 Using IMCs, other mods can register their own custom hearts.
   
-Each heart is serialized with the type `oshi.util.tuples.Triplet<Double, org.apache.common.lang3.function.TriFunction<Player, Level, Gui, ResourceLocation>, org.apache.common.lang3.function.TriFunction<Player, Level, Gui, Integer>>`. It's a bit of a mouthful.
+Each heart is serialized with the type `oshi.util.tuples.Quartet<ResourceLocation, Double, org.apache.common.lang3.function.TriFunction<Player, Level, Gui, ResourceLocation>, org.apache.common.lang3.function.TriFunction<Player, Level, Gui, Integer>>`. (bit of a mouthful lol)
   
+The `ResourceLocation` is the heart's id.
 The `Double` is the heart's priority, e.g. what order hearts are in. For reference, full hearts are 1.0, empty is 2.0, and absorption is 3.0.  
 The first `TriFunction` is a provider for the heart's texture as a ResourceLocation. For example, `new ResourceLocation("namespace:textures/foo/bar/heart.png")` would correspond to the texture at `assets/namespace/textures/foo/bar/heart.png`.  
 The second `TriFunction` is a provider for the number of hearts to render at any given time.  
@@ -30,7 +31,9 @@ You can send an IMC during the `InterModEnqueueEvent` using a line like this:
 InterModComms.sendTo(
         "hearty",
         "register_heart",
-        () -> triplet
+        () -> quartet
 );
 ```
-where `triplet` is of the aforementioned type.
+where `quartet` is of the aforementioned type.
+
+You can also send texture provider or number provider overrides, using a similar format to above, only with "replace_number_provider" or "replace_texture_provider" and an `oshi.util.tuples.Pair<ResourceLocation, TriFunction<Player, Level, Gui, (Integer or ResourceLocation)>`, depending on which override is being used
