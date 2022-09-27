@@ -2,11 +2,14 @@ package com.zygzag.hearty;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.function.TriFunction;
+
+import java.util.List;
 
 public interface HeartType {
     HeartType HEALTH = basicSuppliers(
@@ -83,6 +86,16 @@ public interface HeartType {
         return basicSuppliers(priority, getNumber, (player, world, gui) -> {
             boolean isHealthBlinking = gui.healthBlinkTime > (long)gui.tickCount && (gui.healthBlinkTime - (long)gui.tickCount) / 3L % 2L == 1L;
             return isHealthBlinking ? (world.getLevelData().isHardcore() ? hardcoreBlinking : blinking) : (world.getLevelData().isHardcore() ? hardcore : normal);
+        });
+    }
+
+    static HeartType basicSuppliersOverrides(double priority, TriFunction<Player, Level, Gui, Integer> getNumber, TriFunction<Player, Level, Gui, ResourceLocation> getTexture, List<TriFunction<Player, Level, Gui, Integer>> numberOverrides, List<TriFunction<Player, Level, Gui, ResourceLocation>> texOverrides) {
+        return basicSuppliers(priority, (p, w, g) -> {
+            int original = getNumber.apply(p, w, g);
+            return HeartyUtil.first(HeartyUtil.map(numberOverrides, (k) -> k.apply(p, w, g)), original, (it) -> it != original);
+        }, (p, w, g) -> {
+            ResourceLocation original = getTexture.apply(p, w, g);
+            return HeartyUtil.first(HeartyUtil.map(texOverrides, (k) -> k.apply(p, w, g)), original, (it) -> it != original);
         });
     }
 }

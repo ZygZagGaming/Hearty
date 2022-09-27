@@ -1,11 +1,9 @@
 package com.zygzag.hearty;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class HeartyUtil {
     public static <T extends Comparable<T>> List<T> sorted(List<T> list) {
@@ -61,5 +59,16 @@ public class HeartyUtil {
             }
         }
         return fin;
+    }
+
+    public static <I, O> List<O> map(List<I> list, Function<I, O> func) {
+        List<O> fin = new LinkedList<>();
+        for (I elem : list) fin.add(func.apply(elem));
+        return fin;
+    }
+
+    public static <T> T first(List<T> list, T def, Predicate<T> predicate) {
+        for (T elem : list) if (predicate.test(elem)) return elem;
+        return def;
     }
 }

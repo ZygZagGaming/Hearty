@@ -63,13 +63,9 @@ public class HeartyMain {
                     try {
                         /* what a type */
                         Quartet<ResourceLocation, Double, TriFunction<Player, Level, Gui, Integer>, TriFunction<Player, Level, Gui, ResourceLocation>> quartet = (Quartet<ResourceLocation, Double, TriFunction<Player, Level, Gui, Integer>, TriFunction<Player, Level, Gui, ResourceLocation>>) message.messageSupplier().get();
-                        HeartType type = HeartType.basicSuppliers(quartet.getB(), quartet.getC(), quartet.getD());
-                        List<TriFunction<Player, Level, Gui, ResourceLocation>> texOverrides = HEART_TEXTURE_OVERRIDES.get(quartet.getA());
-                        if (texOverrides != null && texOverrides.size() >= 1)
-                            type = HeartType.basicSuppliers(type.getPriority(), type::getNumber, texOverrides.get(0));
-                        List<TriFunction<Player, Level, Gui, Integer>> numOverrides = HEART_NUMBER_OVERRIDES.get(quartet.getA());
-                        if (numOverrides != null && numOverrides.size() >= 1)
-                            type = HeartType.basicSuppliers(type.getPriority(), numOverrides.get(0), type::getTexture);
+                        if (!HEART_NUMBER_OVERRIDES.containsKey(quartet.getA())) HEART_NUMBER_OVERRIDES.put(quartet.getA(), new ArrayList<>());
+                        if (!HEART_TEXTURE_OVERRIDES.containsKey(quartet.getA())) HEART_TEXTURE_OVERRIDES.put(quartet.getA(), new ArrayList<>());
+                        HeartType type = HeartType.basicSuppliersOverrides(quartet.getB(), quartet.getC(), quartet.getD(), HEART_NUMBER_OVERRIDES.get(quartet.getA()), HEART_TEXTURE_OVERRIDES.get(quartet.getA()));
                         addOrReplaceHeartType(quartet.getA(), type);
                     } catch (ClassCastException e) {
                         LOGGER.error("Mod " + message.senderModId() + " sent a register_heart message with an incorrect type: " + message.messageSupplier().get());
@@ -78,9 +74,6 @@ public class HeartyMain {
                 case "replace_number_provider":
                     try {
                         Pair<ResourceLocation, TriFunction<Player, Level, Gui, Integer>> pair = (Pair<ResourceLocation, TriFunction<Player, Level, Gui, Integer>>) message.messageSupplier().get();
-                        HeartType a = REGISTERED_HEART_TYPES.get(pair.getA());
-                        if (a != null)
-                            addOrReplaceHeartType(pair.getA(), HeartType.basicSuppliers(a.getPriority(), pair.getB(), a::getTexture));
                         if (HEART_NUMBER_OVERRIDES.containsKey(pair.getA()))
                             HEART_NUMBER_OVERRIDES.get(pair.getA()).add(pair.getB());
                         else HEART_NUMBER_OVERRIDES.put(pair.getA(), new ArrayList<>(List.of(pair.getB())));
@@ -91,9 +84,6 @@ public class HeartyMain {
                 case "replace_texture_provider":
                     try {
                         Pair<ResourceLocation, TriFunction<Player, Level, Gui, ResourceLocation>> pair = (Pair<ResourceLocation, TriFunction<Player, Level, Gui, ResourceLocation>>) message.messageSupplier().get();
-                        HeartType a = REGISTERED_HEART_TYPES.get(pair.getA());
-                        if (a != null)
-                            addOrReplaceHeartType(pair.getA(), HeartType.basicSuppliers(a.getPriority(), a::getNumber, pair.getB()));
                         if (HEART_TEXTURE_OVERRIDES.containsKey(pair.getA()))
                             HEART_TEXTURE_OVERRIDES.get(pair.getA()).add(pair.getB());
                         else HEART_TEXTURE_OVERRIDES.put(pair.getA(), new ArrayList<>(List.of(pair.getB())));
