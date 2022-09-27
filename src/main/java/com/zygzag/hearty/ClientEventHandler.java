@@ -18,6 +18,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.LinkedList;
+
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = HeartyMain.MODID)
 public class ClientEventHandler {
@@ -161,9 +163,9 @@ public class ClientEventHandler {
     public static void renderHearts(Gui gui, PoseStack stack, Player player, int xMin, int yMin, int c, int regenHeartWiggle, float maxHealth, int ceilHealth, int displayHealth, int absorptionHearts, boolean isHealthBlinking) {
         int i = 0;
         boolean left = true;
-        for (HeartType type : HeartyMain.REGISTERED_HEART_TYPES) {
+        for (HeartType type : HeartyUtil.sorted(new LinkedList<>(HeartyMain.REGISTERED_HEART_TYPES.values()), (a, b) -> (int) Math.signum(a.getPriority() - b.getPriority()))) {
             int amt = type.getNumber(player, player.level, gui);
-            ResourceLocation texture = type.texture(player, player.level, gui);
+            ResourceLocation texture = type.getTexture(player, player.level, gui);
             for (int k = i; i < k + amt; i++) {
                 int row = i / (HeartyConfig.RENDER_DOUBLE_HEARTS.get() ? 10 : 20);
                 int column = (i / (HeartyConfig.RENDER_DOUBLE_HEARTS.get() ? 1 : 2)) % 10;

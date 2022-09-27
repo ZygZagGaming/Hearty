@@ -4,12 +4,9 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.function.TriFunction;
-
-import java.util.List;
 
 public interface HeartType {
     HeartType HEALTH = basicSuppliers(
@@ -44,29 +41,9 @@ public interface HeartType {
             new ResourceLocation("hearty:textures/hearts/vanilla/absorption_hardcore_blinking.png")
     );
     int getNumber(Player player, Level world, Gui gui);
-    ResourceLocation texture(Player player, Level world, Gui gui);
-    default double priority() {
+    ResourceLocation getTexture(Player player, Level world, Gui gui);
+    default double getPriority() {
         return 1.0;
-    }
-
-    class AttributeHeartType implements HeartType {
-        private final Attribute attribute;
-        private final ResourceLocation texture;
-
-        public AttributeHeartType(Attribute attribute, ResourceLocation texture) {
-            this.attribute = attribute;
-            this.texture = texture;
-        }
-
-        @Override
-        public int getNumber(Player player, Level world, Gui gui) {
-            return Mth.ceil(player.getAttributeValue(attribute));
-        }
-
-        @Override
-        public ResourceLocation texture(Player player, Level world, Gui gui) {
-            return texture;
-        }
     }
 
     static HeartType basicSuppliers(double priority, TriFunction<Player, Level, Gui, Integer> getNumber, TriFunction<Player, Level, Gui, ResourceLocation> getTexture) {
@@ -77,12 +54,12 @@ public interface HeartType {
             }
 
             @Override
-            public ResourceLocation texture(Player player, Level world, Gui gui) {
+            public ResourceLocation getTexture(Player player, Level world, Gui gui) {
                 return getTexture.apply(player, world, gui);
             }
 
             @Override
-            public double priority() {
+            public double getPriority() {
                 return priority;
             }
         };
